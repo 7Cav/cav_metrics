@@ -35,6 +35,16 @@ if(missionNamespace getVariable ["CavMetrics_run",false]) then {
         ["count.vehicles", count vehicles, true] call CavMetrics_fnc_send;
         ["count.players", count allPlayers, true] call CavMetrics_fnc_send;
     };
+
+    // Headless Clients FPS
+    // Thanks to CPL.Brostrom.A
+    private _headlessClients = entities "HeadlessClient_F";
+    {
+        {
+            private _stats_fps = round diag_fps;
+            ["stats.HCfps", _stats_fps] remoteExec ["CavMetrics_fnc_send", 2];
+        } remoteExecCall ["bis_fnc_call", owner _x];
+    } foreach _headlessClients;
     
     // log the runtime and switch off debug so it doesn't flood the log
     if(missionNamespace getVariable ["CavMetrics_debug",false]) then {
